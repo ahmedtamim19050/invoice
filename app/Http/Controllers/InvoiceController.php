@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\NumberToWords;
 use App\Models\Invoice;
+use App\Support\InvoicePdfGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -83,6 +84,35 @@ class InvoiceController extends Controller
         $invoice->load('items');
 
         return view('invoices.print', compact('invoice'));
+    }
+
+    public function download(Invoice $invoice)
+    {
+        $invoice->load('items');
+
+        $html = view('invoices.document-page', [
+            'invoice' => $invoice,
+            'watermark' => watermark_data_uri() ?? watermark_url(),
+        ])->render();
+
+        $filename = str_replace('/', '-', $invoice->invoice_number).'.pdf';
+
+        $pdf = InvoicePdfGenerator::make($html)->pdf();
+
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
+    }
+
+    public function destroy(Invoice $invoice)
+    {
+        $number = $invoice->invoice_number;
+        $invoice->delete();
+
+        return redirect()
+            ->route('dashboard')
+            ->with('success', "Invoice {$number} deleted successfully.");
     }
 
     private function generateInvoiceNumber(): string

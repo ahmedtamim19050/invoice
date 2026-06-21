@@ -41,9 +41,7 @@
 
     <main class="mx-auto max-w-6xl px-4 py-5 sm:px-6 sm:py-8">
         @if (session('success'))
-            <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                {{ session('success') }}
-            </div>
+            <div id="flash-success" data-message="{{ session('success') }}" class="hidden"></div>
         @endif
 
         @yield('content')

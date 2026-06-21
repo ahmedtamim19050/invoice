@@ -39,6 +39,7 @@
 }
 
 .print-btn,
+.download-btn,
 .back-btn {
     display: inline-flex;
     align-items: center;
@@ -59,6 +60,15 @@
 
 .print-btn:hover {
     background: #0369a1;
+}
+
+.download-btn {
+    background: #059669;
+    color: white;
+}
+
+.download-btn:hover {
+    background: #047857;
 }
 
 .back-btn {

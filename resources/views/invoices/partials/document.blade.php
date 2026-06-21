@@ -1,5 +1,5 @@
 <div class="invoice-document {{ ($print ?? false) ? 'invoice-document--print' : '' }}">
-    <div class="invoice-watermark" style="background-image: url('{{ watermark_url() }}');"></div>
+    <div class="invoice-watermark" style="background-image: url('{{ $watermark ?? watermark_url() }}');"></div>
 
     <div class="invoice-content">
         <header class="invoice-header">
