@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helpers\NumberToWords;
 use App\Models\Invoice;
-use App\Support\InvoicePdfGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -88,11 +87,10 @@ class InvoiceController extends Controller
 
     public function download(Invoice $invoice)
     {
-        $invoice->load('items');
-
-        $filename = str_replace('/', '-', $invoice->invoice_number).'.pdf';
-
-        return InvoicePdfGenerator::make($invoice)->download($filename);
+        return redirect()->route('invoices.print', [
+            'invoice' => $invoice,
+            'download' => '1',
+        ]);
     }
 
     public function destroy(Invoice $invoice)

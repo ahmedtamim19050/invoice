@@ -1,4 +1,8 @@
 {
+  "_chunk-Bh1tDfsg.js": {
+    "file": "assets/chunk-Bh1tDfsg.js",
+    "name": "chunk"
+  },
   "_fonts-DkuEHybc.css": {
     "file": "assets/fonts-DkuEHybc.css",
     "src": "_fonts-DkuEHybc.css"
@@ -52,7 +56,7 @@
     "src": "_instrument-sans-600-normal-DMks36a2.woff"
   },
   "resources/css/app.css": {
-    "file": "assets/app-tHda1pm2.css",
+    "file": "assets/app-CppDbVrl.css",
     "name": "app",
     "names": [
       "app.css"
@@ -61,7 +65,7 @@
     "isEntry": true
   },
   "resources/css/invoice-print.css": {
-    "file": "assets/invoice-print-D1o40wV2.css",
+    "file": "assets/invoice-print-Dr73UTP1.css",
     "name": "invoice-print",
     "names": [
       "invoice-print.css"
@@ -70,15 +74,27 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-Dtmz47y-.js",
+    "file": "assets/app--2pA5Xzu.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_chunk-Bh1tDfsg.js"
+    ]
   },
   "resources/js/invoice-form.js": {
     "file": "assets/invoice-form-1lw8528G.js",
     "name": "invoice-form",
     "src": "resources/js/invoice-form.js",
     "isEntry": true
+  },
+  "resources/js/invoice-pdf.js": {
+    "file": "assets/invoice-pdf-CuXf7eZL.js",
+    "name": "invoice-pdf",
+    "src": "resources/js/invoice-pdf.js",
+    "isEntry": true,
+    "imports": [
+      "_chunk-Bh1tDfsg.js"
+    ]
   }
 }

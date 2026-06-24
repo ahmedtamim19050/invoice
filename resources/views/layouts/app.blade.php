@@ -16,9 +16,7 @@
     <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
             <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-3">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-600 to-blue-700 text-sm font-bold text-white shadow-sm">
-                    BB
-                </div>
+                <img src="{{ logo_url() }}" alt="BIO-BEE Healthcare" class="h-10 w-10 shrink-0 rounded-xl object-contain shadow-sm ring-1 ring-slate-200/80">
                 <div class="min-w-0">
                     <p class="truncate text-sm font-semibold text-slate-900 sm:text-base">BIO-BEE HEALTHCARE</p>
                     <p class="truncate text-xs text-slate-500">Invoice Manager</p>

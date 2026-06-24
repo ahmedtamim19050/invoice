@@ -11,6 +11,7 @@ export default defineConfig({
                 'resources/css/invoice-print.css',
                 'resources/js/app.js',
                 'resources/js/invoice-form.js',
+                'resources/js/invoice-pdf.js',
             ],
             refresh: true,
             fonts: [

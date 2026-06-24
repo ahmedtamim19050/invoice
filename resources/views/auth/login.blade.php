@@ -15,9 +15,7 @@
 
         <div class="relative mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-10 sm:px-6">
             <div class="mb-8 text-center">
-                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-xl font-bold shadow-lg shadow-blue-500/30">
-                    BB
-                </div>
+                <img src="{{ logo_url() }}" alt="BIO-BEE Healthcare" class="mx-auto mb-4 h-20 w-20 rounded-2xl object-contain shadow-lg shadow-blue-500/20 ring-1 ring-white/20">
                 <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">BIO-BEE HEALTHCARE</h1>
                 <p class="mt-2 text-sm text-blue-100/80">Invoice Management System</p>
             </div>
