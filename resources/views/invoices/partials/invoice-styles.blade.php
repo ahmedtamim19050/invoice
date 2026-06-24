@@ -22,6 +22,22 @@
         width: 100%;
         box-shadow: none;
     }
+
+    .invoice-header {
+        display: table;
+        width: 100%;
+    }
+
+    .invoice-logo {
+        display: table-cell;
+        width: 90px;
+        vertical-align: top;
+    }
+
+    .invoice-company {
+        display: table-cell;
+        vertical-align: top;
+    }
 @else
     body.invoice-print-page {
         margin: 0;

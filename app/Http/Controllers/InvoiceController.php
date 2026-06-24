@@ -90,19 +90,9 @@ class InvoiceController extends Controller
     {
         $invoice->load('items');
 
-        $html = view('invoices.document-page', [
-            'invoice' => $invoice,
-            'watermark' => watermark_data_uri() ?? watermark_url(),
-        ])->render();
-
         $filename = str_replace('/', '-', $invoice->invoice_number).'.pdf';
 
-        $pdf = InvoicePdfGenerator::make($html)->pdf();
-
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
-        ]);
+        return InvoicePdfGenerator::make($invoice)->download($filename);
     }
 
     public function destroy(Invoice $invoice)
