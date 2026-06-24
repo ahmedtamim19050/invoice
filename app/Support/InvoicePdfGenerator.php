@@ -18,11 +18,18 @@ class InvoicePdfGenerator
         if ($node = self::findBinary('NODE_PATH', [
             'C:\\Program Files\\nodejs\\node.exe',
             'C:\\laragon\\bin\\nodejs\\node-v22\\node.exe',
+            '/usr/local/bin/node',
+            '/usr/bin/node',
         ])) {
             $browsershot->setNodeBinary($node);
         }
 
-        if ($npm = self::findBinary('NPM_PATH', ['C:\\Program Files\\nodejs\\npm.cmd', 'C:\\laragon\\bin\\nodejs\\node-v22\\npm.cmd'])) {
+        if ($npm = self::findBinary('NPM_PATH', [
+            'C:\\Program Files\\nodejs\\npm.cmd',
+            'C:\\laragon\\bin\\nodejs\\node-v22\\npm.cmd',
+            '/usr/local/bin/npm',
+            '/usr/bin/npm',
+        ])) {
             $browsershot->setNpmBinary($npm);
         }
 
@@ -30,6 +37,10 @@ class InvoicePdfGenerator
             'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
             'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
             'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+            '/usr/bin/google-chrome-stable',
+            '/usr/bin/google-chrome',
+            '/usr/bin/chromium',
+            '/usr/bin/chromium-browser',
         ])) {
             $browsershot->setChromePath($chrome);
         }
