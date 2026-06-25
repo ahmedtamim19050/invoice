@@ -4,12 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const template = document.getElementById('item-row-template');
     const addBtn = document.getElementById('add-item-btn');
     const grandTotalEl = document.getElementById('grand-total');
+    const initialItemsEl = document.getElementById('invoice-initial-items');
 
     if (!form || !container || !template || !addBtn) {
         return;
     }
-
-    let itemIndex = 0;
 
     const formatMoney = (value) => {
         return new Intl.NumberFormat('en-US').format(Math.round(value));
@@ -70,17 +69,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const addItem = () => {
+    const setFieldValue = (row, field, value) => {
+        const input = row.querySelector(`[data-field="${field}"]`);
+
+        if (input && value !== null && value !== undefined && value !== '') {
+            input.value = value;
+        }
+    };
+
+    const addItem = (data = {}) => {
         const clone = template.content.cloneNode(true);
         const row = clone.querySelector('.item-row');
 
         container.appendChild(row);
-        itemIndex += 1;
+
+        const element = container.lastElementChild;
+
+        setFieldValue(element, 'description', data.description);
+        setFieldValue(element, 'capacity', data.capacity);
+        setFieldValue(element, 'brand', data.brand);
+        setFieldValue(element, 'origin', data.origin);
+        setFieldValue(element, 'quantity', data.quantity ?? 1);
+        setFieldValue(element, 'unit_price', data.unit_price);
+
         syncFieldNames();
-        bindRowEvents(container.lastElementChild);
-        updateRowTotal(container.lastElementChild);
+        bindRowEvents(element);
+        updateRowTotal(element);
     };
 
-    addBtn.addEventListener('click', addItem);
-    addItem();
+    addBtn.addEventListener('click', () => addItem());
+
+    let initialItems = [];
+
+    if (initialItemsEl?.textContent) {
+        try {
+            initialItems = JSON.parse(initialItemsEl.textContent);
+        } catch {
+            initialItems = [];
+        }
+    }
+
+    if (Array.isArray(initialItems) && initialItems.length > 0) {
+        initialItems.forEach((item) => addItem(item));
+    } else {
+        addItem();
+    }
 });

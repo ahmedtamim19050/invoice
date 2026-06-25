@@ -56,7 +56,7 @@
     "src": "_instrument-sans-600-normal-DMks36a2.woff"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CppDbVrl.css",
+    "file": "assets/app-BxMvDzdw.css",
     "name": "app",
     "names": [
       "app.css"
@@ -65,7 +65,7 @@
     "isEntry": true
   },
   "resources/css/invoice-print.css": {
-    "file": "assets/invoice-print-Dr73UTP1.css",
+    "file": "assets/invoice-print-DZ1XMYjm.css",
     "name": "invoice-print",
     "names": [
       "invoice-print.css"
@@ -83,7 +83,7 @@
     ]
   },
   "resources/js/invoice-form.js": {
-    "file": "assets/invoice-form-1lw8528G.js",
+    "file": "assets/invoice-form-Cg6vDBQ2.js",
     "name": "invoice-form",
     "src": "resources/js/invoice-form.js",
     "isEntry": true

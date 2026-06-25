@@ -44,7 +44,12 @@ body.invoice-print-page {
     }
 
     .invoice-watermark {
-        opacity: 0.09 !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 82% !important;
+        max-height: 78% !important;
+        opacity: 0.30 !important;
     }
 
     .invoice-watermark,

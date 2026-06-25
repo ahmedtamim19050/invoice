@@ -16,26 +16,10 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'recipient_name' => ['required', 'string', 'max:255'],
-            'recipient_address' => ['required', 'string'],
-            'recipient_contact' => ['required', 'string', 'max:50'],
-            'subject' => ['required', 'string', 'max:255'],
-            'items' => ['required', 'array', 'min:1'],
-            'items.*.description' => ['required', 'string', 'max:255'],
-            'items.*.capacity' => ['nullable', 'string', 'max:255'],
-            'items.*.brand' => ['nullable', 'string', 'max:255'],
-            'items.*.origin' => ['nullable', 'string', 'max:255'],
-            'items.*.quantity' => ['required', 'integer', 'min:1'],
-            'items.*.unit_price' => ['required', 'numeric', 'min:0'],
-        ]);
+        $validated = $this->validateInvoice($request);
 
         $invoice = DB::transaction(function () use ($validated) {
-            $totalAmount = 0;
-
-            foreach ($validated['items'] as $item) {
-                $totalAmount += $item['quantity'] * $item['unit_price'];
-            }
+            $totalAmount = $this->calculateTotal($validated['items']);
 
             $invoice = Invoice::create([
                 'invoice_number' => $this->generateInvoiceNumber(),
@@ -48,20 +32,7 @@ class InvoiceController extends Controller
                 'user_id' => auth()->id(),
             ]);
 
-            foreach ($validated['items'] as $index => $item) {
-                $lineTotal = $item['quantity'] * $item['unit_price'];
-
-                $invoice->items()->create([
-                    'description' => $item['description'],
-                    'capacity' => $item['capacity'] ?? null,
-                    'brand' => $item['brand'] ?? null,
-                    'origin' => $item['origin'] ?? null,
-                    'quantity' => $item['quantity'],
-                    'unit_price' => $item['unit_price'],
-                    'total_price' => $lineTotal,
-                    'sort_order' => $index,
-                ]);
-            }
+            $this->syncItems($invoice, $validated['items']);
 
             return $invoice;
         });
@@ -76,6 +47,47 @@ class InvoiceController extends Controller
         $invoice->load('items');
 
         return view('invoices.show', compact('invoice'));
+    }
+
+    public function edit(Invoice $invoice)
+    {
+        $invoice->load('items');
+
+        $initialItems = $invoice->items->map(fn ($item) => [
+            'description' => $item->description,
+            'capacity' => $item->capacity,
+            'brand' => $item->brand,
+            'origin' => $item->origin,
+            'quantity' => $item->quantity,
+            'unit_price' => $item->unit_price,
+        ])->values()->all();
+
+        return view('invoices.edit', compact('invoice', 'initialItems'));
+    }
+
+    public function update(Request $request, Invoice $invoice)
+    {
+        $validated = $this->validateInvoice($request);
+
+        DB::transaction(function () use ($invoice, $validated) {
+            $totalAmount = $this->calculateTotal($validated['items']);
+
+            $invoice->update([
+                'recipient_name' => $validated['recipient_name'],
+                'recipient_address' => $validated['recipient_address'],
+                'recipient_contact' => $validated['recipient_contact'],
+                'subject' => $validated['subject'],
+                'total_amount' => $totalAmount,
+                'amount_in_words' => NumberToWords::taka($totalAmount),
+            ]);
+
+            $invoice->items()->delete();
+            $this->syncItems($invoice, $validated['items']);
+        });
+
+        return redirect()
+            ->route('invoices.show', $invoice)
+            ->with('success', 'Invoice updated successfully.');
     }
 
     public function print(Invoice $invoice)
@@ -101,6 +113,52 @@ class InvoiceController extends Controller
         return redirect()
             ->route('dashboard')
             ->with('success', "Invoice {$number} deleted successfully.");
+    }
+
+    private function validateInvoice(Request $request): array
+    {
+        return $request->validate([
+            'recipient_name' => ['required', 'string', 'max:255'],
+            'recipient_address' => ['required', 'string'],
+            'recipient_contact' => ['required', 'string', 'max:50'],
+            'subject' => ['required', 'string', 'max:255'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.description' => ['required', 'string', 'max:255'],
+            'items.*.capacity' => ['nullable', 'string', 'max:255'],
+            'items.*.brand' => ['nullable', 'string', 'max:255'],
+            'items.*.origin' => ['nullable', 'string', 'max:255'],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'items.*.unit_price' => ['required', 'numeric', 'min:0'],
+        ]);
+    }
+
+    private function calculateTotal(array $items): float
+    {
+        $totalAmount = 0;
+
+        foreach ($items as $item) {
+            $totalAmount += $item['quantity'] * $item['unit_price'];
+        }
+
+        return $totalAmount;
+    }
+
+    private function syncItems(Invoice $invoice, array $items): void
+    {
+        foreach ($items as $index => $item) {
+            $lineTotal = $item['quantity'] * $item['unit_price'];
+
+            $invoice->items()->create([
+                'description' => $item['description'],
+                'capacity' => $item['capacity'] ?? null,
+                'brand' => $item['brand'] ?? null,
+                'origin' => $item['origin'] ?? null,
+                'quantity' => $item['quantity'],
+                'unit_price' => $item['unit_price'],
+                'total_price' => $lineTotal,
+                'sort_order' => $index,
+            ]);
+        }
     }
 
     private function generateInvoiceNumber(): string
