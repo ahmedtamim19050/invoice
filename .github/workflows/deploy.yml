@@ -31,7 +31,7 @@ jobs:
           host: 159.198.64.216
           username: sohojware-invoice
           port: 22
-          key: SHA256:QKzNe7A6Q5GY2OKz9S6EclV/3GJkaoa6IN+Vl0dlfBw
+          password: ${{ secrets.SSH_PASSWORD }}
 
           script: |
             set -e
