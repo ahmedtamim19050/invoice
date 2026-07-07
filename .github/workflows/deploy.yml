@@ -1,0 +1,54 @@
+name: Laravel Production Deploy
+
+on:
+  push:
+    branches:
+       [main]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_mysql, bcmath, intl, zip
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: 159.198.64.216
+          username: sohojware-invoice
+          port: 22
+          key: SHA256:QKzNe7A6Q5GY2OKz9S6EclV/3GJkaoa6IN+Vl0dlfBw
+
+          script: |
+            set -e
+
+            cd /home/sohojware-invoice/htdocs/invoice.sohojware.dev/current
+
+            git pull origin main
+
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            php artisan migrate --force
+
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            php artisan queue:restart
+
+            echo "Deployment completed successfully."
